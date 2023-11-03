@@ -1,6 +1,8 @@
+import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 
-export default function SignUp() {
+export default function SignUp({signedUp, setSignedUp}) {
+    const nav = useNavigate()
 
     const handleFormSubmit = (e) => {
         e.preventDefault()
@@ -8,23 +10,46 @@ export default function SignUp() {
             email: e.target.email.value,
             password: e.target.password.value
         }
-        useNavigate("/")
-        
+        fetch("http://localhost:8080", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData),
+        })
+            .then(res => res.json())
+            .then((login) => setSignedUp(true))
+            .catch(console.error)
+
+        nav("/login")
+
+    }
+    const goToLogIn = () => {
+        nav("/login")
     }
 
     return (
-        <form onSubmit={handleFormSubmit} action="">
+        <>
+            <h2>Sign Up:</h2>
+            <form onSubmit={handleFormSubmit} action="">
 
-            <label htmlFor="email">
-                <input type="email" name="email" />
-            </label>
+                <label htmlFor="email">
+                    Email:
+                    <input type="email" name="email" />
+                </label>
+                <br />
+                <label htmlFor="password">
+                    Password:
+                    <input type="password" name="password" />
+                </label>
+                <br />
+                <button type="submit">Sign up</button>
+                <br />
+                <hr />
+                <h3>Already have an account?</h3>
+                <button onClick={goToLogIn}>Log In</button>
 
-            <label htmlFor="password">
-                <input type="password" name="password" />
-            </label>
-
-            <button type="submit">Sign up</button>
-
-        </form>
+            </form>
+        </>
     )
 }
