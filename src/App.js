@@ -14,12 +14,12 @@ function App() {
 
   return (
     <>
-      <Header />
-      <hr />
       <BrowserRouter>
+      <Header loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
+      <hr />
       <Routes>
         <Route path="/login" element={<Login />}/>
-        <Route path="/" element={<SignUp />}/>
+        <Route path="/" element={<SignUp signedUp={signedUp} setSignedUp={setSignedUp}/>}/>
         <Route path="/landing" element={<Landing />} />
       </Routes>
         <Home loggedIn={loggedIn} setLoggedIn={setLoggedIn} signedUp={signedUp} setSignedUp={setSignedUp} />
