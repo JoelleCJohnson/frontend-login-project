@@ -6,44 +6,40 @@ export default function SignUp({ signedUp, setSignedUp }) {
     const handleFormSubmit = (e) => {
         e.preventDefault()
 
-        //put user input into object format:
-        const formData = {
-            email: e.target.email.value,
-            password: e.target.password.value
-        }
-        //handle undefined fields
-        if (formData.email === undefined || formData.password === undefined) {
-            console.log("error, one or more fields are undefined.")
-        } //if not undefined do the following:
-        else {
             //get information from database
             fetch("http://localhost:8080/")
                 .then(res => res.json())
                 //with users data from database, turn it and formData into JSON formatting
-                .then((users) => {
-                    JSON.stringify(users)
-                    JSON.stringify(formData)
-                    //find the user in the database by formData.email
-                    if (users.id === formData.email) {
-                        //if already signed up, setSignedUp to true
-                        setSignedUp(true)
-                    } else {
+                .then((users) => postReq())
+                .catch(console.error)
+        }
+    
 
-                        //else, add user to db with POST request
-                        fetch("http://localhost:8080/", {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(formData),
-                        })
-                            .then(res => res.json())
-                            .then(() => {
-                                //once POST has completed, prompt the user to log in. 
-                                // nav("/login")
-                            })
-                            .catch(console.error)
-                    }
+    const postReq = (users, e) => {
+        const formData = {
+            email: e.target.email.value,
+            password: e.target.password.value
+        }
+        JSON.stringify(users)
+        JSON.stringify(formData)
+        //find the user in the database by formData.email
+        if (users.id === formData.email) {
+            //if already signed up, setSignedUp to true
+            setSignedUp(true)
+        } else {
+
+            //else, add user to db with POST request
+            fetch("http://localhost:8080/", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData),
+            })
+                .then(res => res.json())
+                .then(() => {
+                    //once POST has completed, prompt the user to log in. 
+                    nav("/login")
                 })
                 .catch(console.error)
         }
